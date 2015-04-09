@@ -1,2 +1,10 @@
 # EGU2015
-EGU 2015 conference Open Source Computing in Hydrology | PICO Session
+
+Slides for talk at EGU 2015 conference - session Open Source Computing in Hydrology
+
+
+
+
+
+
+Copyright (c) 2015, Stijn Van Hoey and Sophie Balemans
