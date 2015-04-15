@@ -105,13 +105,14 @@ def _select_season_OF(objective,season,objective_function):
      return selected_of
     
 def create_scatterhist(all_parameters, parameter1, parameter2, objective,
-                        pars_names, xbinwidth = 0.05, ybinwidth = 0.05,
+                        xbinwidth = 0.05, ybinwidth = 0.05,
                         objective_function='SSE', 
                         colormaps = "red_yellow_green",
                         threshold=0.02,
                         season = 'Winter', 
                         *args,  **kwargs):
-                            
+                    
+                
     '''
     Function to create the interactive scatterplot. Behavioural is always taken
     as lower as the given threshold.
@@ -122,9 +123,8 @@ def create_scatterhist(all_parameters, parameter1, parameter2, objective,
         A number of parameter (p) value combinations used as model input. Length N
         corresponds to the number of simulations
         
-    parameter1, parameter 2: {parametername : value}
-        Parametername of the parameters that the user wants to use for 
-        model evaluation
+    parameter1, parameter 2: parametername 
+        Parametername of the parameters that are visualised in the scatterplot
         
     objective: nxk pd.Dataframe
         Values of objective function for all simulations (n) and for all possible combination (k)
@@ -132,9 +132,6 @@ def create_scatterhist(all_parameters, parameter1, parameter2, objective,
         the objective function values for all simulations calculated
         for a selected criteria (SSE, RMSE, RRMSE) based on the whole dateset 
         or on a subdataset (specific season).
-        
-    parsnames: {parametername : value}
-        dict with all parameters (p) used the model
     
     xbinwidth: float
         defines the width of the xbin to the data used
@@ -172,14 +169,14 @@ def create_scatterhist(all_parameters, parameter1, parameter2, objective,
     '''
         
     # Selected season & objective_function
-    all_parameters=all_parameters.values
+    all_parameters=all_parameters
     selected_of= _select_season_OF(objective,season,objective_function)
     
     #Translate color into a colormap
     colormaps = translate_cmap(colormaps)
     
     #Selected parameters & objective function 
-    parameters = np.vstack((all_parameters[:,parameter1], all_parameters[:,parameter2])).T
+    parameters = np.vstack((all_parameters[parameter1], all_parameters[parameter2])).T
     scaled_of = np.array((selected_of-selected_of.min())/(selected_of.max()-selected_of.min()))
     
     #calculation of the real threshold value from the relative one
@@ -237,10 +234,10 @@ def create_scatterhist(all_parameters, parameter1, parameter2, objective,
     
 
     # now determine nice limits by hand:
-    xmin = np.min(all_parameters[:,parameter1])
-    xmax = np.max(all_parameters[:,parameter1])
-    ymin = np.min(all_parameters[:,parameter2])
-    ymax = np.max(all_parameters[:,parameter2])
+    xmin = all_parameters[parameter1].min()
+    xmax = all_parameters[parameter1].max()
+    ymin = all_parameters[parameter2].min()
+    ymax = all_parameters[parameter2].max()
     
     ax_histx.set_xlim( (xmin, xmax) )
     ax_histy.set_ylim( (ymin, ymax) )
@@ -297,8 +294,8 @@ def create_scatterhist(all_parameters, parameter1, parameter2, objective,
 
 
    # x and y label of parameter names
-    ax_scatter.set_xlabel(pars_names[parameter1], horizontalalignment ='center', verticalalignment ='center')    
-    ax_scatter.set_ylabel(pars_names[parameter2], horizontalalignment ='center', verticalalignment ='center')    
+    ax_scatter.set_xlabel(parameter1, horizontalalignment ='center', verticalalignment ='center')    
+    ax_scatter.set_ylabel(parameter2, horizontalalignment ='center', verticalalignment ='center')    
   
     # Colorbar
     cbar = fig.colorbar(sc1, ax=ax_scatter, cmap=colormaps,
